@@ -33,7 +33,7 @@ export default function About() {
             <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-900/70 p-3">
               <div className="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-slate-950">
                 <Image
-                  src="/image/image.jpg"
+                  src="/images/image.jpg"
                   alt="Biruke, Full Stack Developer"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
