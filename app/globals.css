@@ -1,26 +1,939 @@
 @import "tailwindcss";
 
+/* ========================================
+   1. GLOBAL THEME VARIABLES
+======================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #030712;
+  --foreground: #f8fafc;
+
+  --primary: #7c3aed;
+  --primary-light: #8b5cf6;
+  --secondary: #2563eb;
+
+  --muted: #94a3b8;
+  --border: rgba(148, 163, 184, 0.15);
+
+  --card: rgba(15, 23, 42, 0.65);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ========================================
+   2. GLOBAL RESET
+======================================== */
+
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  min-height: 100%;
 }
 
 body {
-  background: var(--background);
+  margin: 0;
+  min-height: 100vh;
+
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(124, 58, 237, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(37, 99, 235, 0.1),
+      transparent 30%
+    ),
+    var(--background);
+
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(124, 58, 237, 0.5);
+  color: white;
+}
+
+/* ========================================
+   3. CUSTOM SCROLLBAR
+======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    var(--primary),
+    var(--secondary)
+  );
+
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    to bottom,
+    #a78bfa,
+    #60a5fa
+  );
+}
+
+/* ========================================
+   4. REUSABLE CONTAINER
+======================================== */
+
+.container-custom {
+  width: min(1200px, calc(100% - 40px));
+  margin-inline: auto;
+}
+
+/* ========================================
+   5. GLASS CARD
+======================================== */
+
+.glass-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ========================================
+   6. GRADIENT TEXT
+======================================== */
+
+.gradient-text {
+  background: linear-gradient(
+    90deg,
+    #8b5cf6,
+    #3b82f6
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ========================================
+   7. GRADIENT BUTTON
+======================================== */
+
+.gradient-button {
+  background: linear-gradient(
+    135deg,
+    #7c3aed,
+    #2563eb
+  );
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.gradient-button:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 30px rgba(124, 58, 237, 0.3);
+}
+
+.gradient-button:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 4px;
+}
+
+/* ========================================
+   8. ANIMATED 3D BACKGROUND
+======================================== */
+
+.three-d-background {
+  position: fixed;
+  inset: 0;
+
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(76, 29, 149, 0.2),
+      transparent 55%
+    ),
+    #030712;
+}
+
+/* ========================================
+   9. PURPLE AND BLUE AMBIENT LIGHTS
+======================================== */
+
+.three-d-glow {
+  position: absolute;
+
+  width: 38rem;
+  height: 38rem;
+
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.22;
+
+  will-change: transform;
+}
+
+.three-d-glow-one {
+  top: -18rem;
+  left: -12rem;
+
+  background: #7c3aed;
+
+  animation:
+    glowFloatOne 18s ease-in-out infinite alternate;
+}
+
+.three-d-glow-two {
+  top: 15%;
+  right: -20rem;
+
+  background: #2563eb;
+
+  animation:
+    glowFloatTwo 22s ease-in-out infinite alternate;
+}
+
+.three-d-glow-three {
+  bottom: -25rem;
+  left: 30%;
+
+  background: #9333ea;
+
+  animation:
+    glowFloatThree 20s ease-in-out infinite alternate;
+}
+
+/* ========================================
+   10. 3D PERSPECTIVE GRID
+======================================== */
+
+.three-d-grid {
+  position: absolute;
+
+  inset: 15% -25% -35%;
+
+  background-image:
+    linear-gradient(
+      rgba(139, 92, 246, 0.14) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(96, 165, 250, 0.12) 1px,
+      transparent 1px
+    );
+
+  background-size: 60px 60px;
+
+  transform:
+    perspective(700px)
+    rotateX(62deg)
+    scale(1.4);
+
+  transform-origin: center top;
+
+  opacity: 0.55;
+
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 20%,
+    black 65%,
+    transparent
+  );
+
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black 20%,
+    black 65%,
+    transparent
+  );
+
+  animation: gridMove 24s linear infinite;
+}
+
+/* ========================================
+   11. FLOATING 3D SPHERES
+======================================== */
+
+.three-d-orb {
+  position: absolute;
+
+  border-radius: 50%;
+
+  transform-style: preserve-3d;
+  will-change: transform;
+
+  background:
+    radial-gradient(
+      circle at 28% 25%,
+      rgba(255, 255, 255, 0.9),
+      rgba(196, 181, 253, 0.45) 8%,
+      rgba(124, 58, 237, 0.22) 28%,
+      rgba(59, 130, 246, 0.1) 52%,
+      transparent 72%
+    );
+
+  border: 1px solid rgba(196, 181, 253, 0.2);
+
+  box-shadow:
+    inset -15px -15px 40px rgba(59, 130, 246, 0.12),
+    inset 10px 10px 25px rgba(255, 255, 255, 0.06),
+    0 0 60px rgba(124, 58, 237, 0.1);
+
+  opacity: 0.7;
+}
+
+.three-d-orb-one {
+  width: 230px;
+  height: 230px;
+
+  top: 16%;
+  right: 10%;
+
+  animation: orbFloatOne 12s ease-in-out infinite;
+}
+
+.three-d-orb-two {
+  width: 140px;
+  height: 140px;
+
+  top: 48%;
+  left: 7%;
+
+  animation: orbFloatTwo 15s ease-in-out infinite;
+}
+
+.three-d-orb-three {
+  width: 90px;
+  height: 90px;
+
+  bottom: 12%;
+  right: 24%;
+
+  animation: orbFloatThree 10s ease-in-out infinite;
+}
+
+/* ========================================
+   12. ROTATING 3D RINGS
+======================================== */
+
+.three-d-ring {
+  position: absolute;
+
+  border: 1px solid rgba(167, 139, 250, 0.24);
+
+  border-radius: 50%;
+
+  transform-style: preserve-3d;
+  transform-origin: center;
+
+  box-shadow:
+    0 0 25px rgba(124, 58, 237, 0.07),
+    inset 0 0 25px rgba(59, 130, 246, 0.04);
+
+  will-change: transform;
+}
+
+.three-d-ring-one {
+  width: 390px;
+  height: 160px;
+
+  top: 22%;
+  right: 5%;
+
+  animation: ringRotateOne 22s linear infinite;
+}
+
+.three-d-ring-two {
+  width: 300px;
+  height: 120px;
+
+  bottom: 15%;
+  left: 12%;
+
+  animation: ringRotateTwo 18s linear infinite;
+}
+
+/* ========================================
+   13. FLOATING PARTICLES
+======================================== */
+
+.three-d-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.three-d-particles span {
+  position: absolute;
+
+  display: block;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 50%;
+
+  background: #c4b5fd;
+
+  box-shadow:
+    0 0 12px rgba(167, 139, 250, 0.8);
+
+  opacity: 0.35;
+
+  animation: particleFloat 8s ease-in-out infinite alternate;
+}
+
+/* Particle positions */
+
+.three-d-particles span:nth-child(1) {
+  left: 7%;
+  top: 11%;
+  animation-delay: -1s;
+}
+
+.three-d-particles span:nth-child(2) {
+  left: 18%;
+  top: 27%;
+  animation-delay: -3s;
+}
+
+.three-d-particles span:nth-child(3) {
+  left: 29%;
+  top: 8%;
+  animation-delay: -5s;
+}
+
+.three-d-particles span:nth-child(4) {
+  left: 41%;
+  top: 35%;
+  animation-delay: -2s;
+}
+
+.three-d-particles span:nth-child(5) {
+  left: 52%;
+  top: 16%;
+  animation-delay: -4s;
+}
+
+.three-d-particles span:nth-child(6) {
+  left: 63%;
+  top: 45%;
+  animation-delay: -6s;
+}
+
+.three-d-particles span:nth-child(7) {
+  left: 74%;
+  top: 12%;
+  animation-delay: -2s;
+}
+
+.three-d-particles span:nth-child(8) {
+  left: 86%;
+  top: 29%;
+  animation-delay: -5s;
+}
+
+.three-d-particles span:nth-child(9) {
+  left: 94%;
+  top: 51%;
+  animation-delay: -3s;
+}
+
+.three-d-particles span:nth-child(10) {
+  left: 12%;
+  top: 63%;
+  animation-delay: -6s;
+}
+
+.three-d-particles span:nth-child(11) {
+  left: 23%;
+  top: 82%;
+  animation-delay: -2s;
+}
+
+.three-d-particles span:nth-child(12) {
+  left: 35%;
+  top: 57%;
+  animation-delay: -4s;
+}
+
+.three-d-particles span:nth-child(13) {
+  left: 46%;
+  top: 74%;
+  animation-delay: -1s;
+}
+
+.three-d-particles span:nth-child(14) {
+  left: 57%;
+  top: 88%;
+  animation-delay: -5s;
+}
+
+.three-d-particles span:nth-child(15) {
+  left: 69%;
+  top: 63%;
+  animation-delay: -3s;
+}
+
+.three-d-particles span:nth-child(16) {
+  left: 81%;
+  top: 78%;
+  animation-delay: -6s;
+}
+
+.three-d-particles span:nth-child(17) {
+  left: 91%;
+  top: 92%;
+  animation-delay: -2s;
+}
+
+.three-d-particles span:nth-child(18) {
+  left: 5%;
+  top: 42%;
+  animation-delay: -4s;
+}
+
+.three-d-particles span:nth-child(19) {
+  left: 33%;
+  top: 47%;
+  animation-delay: -1s;
+}
+
+.three-d-particles span:nth-child(20) {
+  left: 49%;
+  top: 5%;
+  animation-delay: -5s;
+}
+
+.three-d-particles span:nth-child(21) {
+  left: 72%;
+  top: 36%;
+  animation-delay: -3s;
+}
+
+.three-d-particles span:nth-child(22) {
+  left: 89%;
+  top: 68%;
+  animation-delay: -6s;
+}
+
+.three-d-particles span:nth-child(23) {
+  left: 16%;
+  top: 91%;
+  animation-delay: -2s;
+}
+
+.three-d-particles span:nth-child(24) {
+  left: 59%;
+  top: 28%;
+  animation-delay: -4s;
+}
+
+/* ========================================
+   14. ANIMATION KEYFRAMES
+======================================== */
+
+@keyframes glowFloatOne {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(100px, 80px, 0);
+  }
+}
+
+@keyframes glowFloatTwo {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-100px, 100px, 0);
+  }
+}
+
+@keyframes glowFloatThree {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(80px, -90px, 0);
+  }
+}
+
+@keyframes gridMove {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 60px;
+  }
+}
+
+@keyframes orbFloatOne {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotateY(0deg);
+  }
+
+  50% {
+    transform: translate3d(-35px, 40px, 30px) rotateY(25deg);
+  }
+}
+
+@keyframes orbFloatTwo {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(25px, -35px, 20px);
+  }
+}
+
+@keyframes orbFloatThree {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotateX(0deg);
+  }
+
+  50% {
+    transform: translate3d(-25px, -30px, 20px) rotateX(35deg);
+  }
+}
+
+@keyframes ringRotateOne {
+  from {
+    transform: rotate(-30deg) rotateY(0deg);
+  }
+
+  to {
+    transform: rotate(330deg) rotateY(360deg);
+  }
+}
+
+@keyframes ringRotateTwo {
+  from {
+    transform: rotate(35deg) rotateX(0deg);
+  }
+
+  to {
+    transform: rotate(395deg) rotateX(360deg);
+  }
+}
+
+@keyframes particleFloat {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.15;
+  }
+
+  to {
+    transform: translate3d(15px, -25px, 10px);
+    opacity: 0.65;
+  }
+}
+
+/* ========================================
+   15. LIGHT THEME
+======================================== */
+
+html[data-theme="light"] {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+
+  --muted: #475569;
+
+  --border: rgba(15, 23, 42, 0.12);
+
+  --card: rgba(255, 255, 255, 0.8);
+}
+
+html[data-theme="light"] body {
+  background-color: var(--background) !important;
+
+  background-image:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(124, 58, 237, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(37, 99, 235, 0.07),
+      transparent 30%
+    ) !important;
+
+  color: var(--foreground);
+}
+
+/* Keep the 3D background subtle in light mode */
+
+html[data-theme="light"] .three-d-background {
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(124, 58, 237, 0.08),
+      transparent 55%
+    ),
+    #f8fafc;
+}
+
+html[data-theme="light"] .three-d-glow {
+  opacity: 0.12;
+}
+
+html[data-theme="light"] .three-d-grid {
+  background-image:
+    linear-gradient(
+      rgba(124, 58, 237, 0.1) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(37, 99, 235, 0.08) 1px,
+      transparent 1px
+    );
+
+  opacity: 0.45;
+}
+
+html[data-theme="light"] .three-d-orb {
+  opacity: 0.35;
+}
+
+html[data-theme="light"] .three-d-ring {
+  border-color: rgba(124, 58, 237, 0.18);
+}
+
+html[data-theme="light"] .three-d-particles span {
+  background: #7c3aed;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+}
+
+/* Light theme text and component adjustments */
+
+html[data-theme="light"] .text-white {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] [class*="text-slate-"] {
+  color: #475569 !important;
+}
+
+html[data-theme="light"] [class*="bg-slate-"] {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+}
+
+html[data-theme="light"] [class*="bg-white/"] {
+  background-color: rgba(15, 23, 42, 0.04) !important;
+}
+
+html[data-theme="light"] [class*="border-white/"],
+html[data-theme="light"] [class*="border-slate-"] {
+  border-color: rgba(15, 23, 42, 0.14) !important;
+}
+
+html[data-theme="light"] [class*="bg-gradient-to-"] {
+  background-image: linear-gradient(
+    135deg,
+    #f5f3ff,
+    #eff6ff
+  ) !important;
+}
+
+/* ========================================
+   16. RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 768px) {
+  .container-custom {
+    width: min(100% - 32px, 1200px);
+  }
+
+  .three-d-glow {
+    width: 24rem;
+    height: 24rem;
+
+    filter: blur(80px);
+  }
+
+  .three-d-grid {
+    inset: 25% -70% -20%;
+
+    background-size: 42px 42px;
+  }
+
+  .three-d-orb-one {
+    width: 140px;
+    height: 140px;
+
+    right: -25px;
+    top: 20%;
+  }
+
+  .three-d-orb-two {
+    width: 85px;
+    height: 85px;
+
+    left: -15px;
+    top: 50%;
+  }
+
+  .three-d-orb-three {
+    width: 60px;
+    height: 60px;
+
+    right: 12%;
+  }
+
+  .three-d-ring-one {
+    width: 250px;
+    height: 100px;
+
+    right: -80px;
+  }
+
+  .three-d-ring-two {
+    width: 200px;
+    height: 80px;
+
+    left: -70px;
+  }
+}
+
+/* ========================================
+   17. REDUCE MOTION ACCESSIBILITY
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .three-d-background *,
+  .three-d-background *::before,
+  .three-d-background *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+
+  .gradient-button {
+    transition: none;
+  }
+}
+/* Keep sections visible below the sticky navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+section[id] {
+  scroll-margin-top: 100px;
+}
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 100px;
+}
+
+#home,
+#about,
+#technologies,
+#projects,
+#services,
+#contact {
+  scroll-margin-top: 100px;
+}
+/* ========================================
+   NAVBAR SPACING AND RED HOVER EFFECT
+======================================== */
+
+/* Desktop navigation spacing */
+.navbar-links {
+  column-gap: 24px;
+}
+
+@media (min-width: 1280px) {
+  .navbar-links {
+    column-gap: 32px;
+  }
+}
+
+/* Desktop navigation hover */
+.navbar-link {
+  position: relative;
+  display: inline-block;
+  padding-block: 8px;
+}
+
+.navbar-link:hover,
+.navbar-link:focus-visible {
+  color: #ef4444 !important;
+}
+
+/* Red underline animation */
+.navbar-link::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #ef4444;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.navbar-link:hover::after,
+.navbar-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Mobile menu hover and keyboard focus */
+.mobile-nav-link:hover,
+.mobile-nav-link:focus-visible,
+.mobile-nav-link:active {
+  color: #f87171 !important;
+  background-color: rgba(239, 68, 68, 0.12) !important;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .navbar-link::after {
+    transition: none;
+  }
 }
